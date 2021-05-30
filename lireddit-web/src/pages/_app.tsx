@@ -1,11 +1,5 @@
 import { ColorModeProvider, ThemeProvider } from "@chakra-ui/react"
-import {
-	createClient,
-	dedupExchange,
-	fetchExchange,
-	makeResult,
-	Provider,
-} from "urql"
+import { createClient, dedupExchange, fetchExchange, Provider } from "urql"
 import { Cache, cacheExchange, QueryInput } from "@urql/exchange-graphcache"
 import {
 	LoginMutation,
