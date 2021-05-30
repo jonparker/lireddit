@@ -1,5 +1,5 @@
-import { User } from "../entities/User";
-import { MyContext } from "src/types";
+import { User } from "../entities/User"
+import { MyContext } from "src/types"
 import {
 	Arg,
 	Ctx,
@@ -9,32 +9,32 @@ import {
 	ObjectType,
 	Query,
 	Resolver,
-} from "type-graphql";
+} from "type-graphql"
 
 @InputType()
 class UsernamePasswordInput {
 	@Field()
-	username: string;
+	username: string
 	@Field()
-	password: string;
+	password: string
 }
 
 @ObjectType()
 class FieldError {
 	@Field()
-	field: string;
+	field: string
 
 	@Field()
-	message: string;
+	message: string
 }
 
 @ObjectType()
 class UserResponse {
 	@Field(() => [FieldError], { nullable: true })
-	errors?: FieldError[];
+	errors?: FieldError[]
 
 	@Field(() => User, { nullable: true })
-	user?: User;
+	user?: User
 }
 
 @Resolver()
@@ -43,9 +43,9 @@ export default class UserResolver {
 	async me(@Ctx() { req, em }: MyContext) {
 		// you are not logged in
 		if (!req.session.userid) {
-			return null;
+			return null
 		}
-		return await em.findOne(User, { id: req.session.userid });
+		return await em.findOne(User, { id: req.session.userid })
 	}
 
 	@Mutation(() => UserResponse)
@@ -53,7 +53,7 @@ export default class UserResolver {
 		@Arg("options") options: UsernamePasswordInput,
 		@Ctx() { req, em }: MyContext
 	): Promise<UserResponse> {
-		const userExists = await em.findOne(User, { username: options.username });
+		const userExists = await em.findOne(User, { username: options.username })
 
 		if (userExists || options.username.length <= 2) {
 			return {
@@ -65,7 +65,7 @@ export default class UserResolver {
 							: "username must be at least three characters",
 					},
 				],
-			};
+			}
 		}
 		if (options.password.length <= 2) {
 			return {
@@ -75,21 +75,21 @@ export default class UserResolver {
 						message: "password must be longer than two characters",
 					},
 				],
-			};
+			}
 		}
 		// password should be hashed
 		const user = em.create(User, {
 			username: options.username,
 			password: options.password,
-		});
+		})
 
-		await em.persistAndFlush(user);
+		await em.persistAndFlush(user)
 		// login user
-		req.session.userid = user.id;
+		req.session.userid = user.id
 
 		return {
 			user,
-		};
+		}
 	}
 
 	@Mutation(() => UserResponse)
@@ -97,10 +97,10 @@ export default class UserResolver {
 		@Arg("options") options: UsernamePasswordInput,
 		@Ctx() { em, req }: MyContext
 	): Promise<UserResponse> {
-		const user = await em.findOne(User, { username: options.username });
+		const user = await em.findOne(User, { username: options.username })
 
 		// yeah, should be hashed.
-		const valid = user && user.password === options.password;
+		const valid = user && user.password === options.password
 
 		if (!valid) {
 			return {
@@ -110,11 +110,11 @@ export default class UserResolver {
 						message: "invalid username or password",
 					},
 				],
-			};
+			}
 		}
 
-		req.session.userid = user?.id;
+		req.session.userid = user?.id
 
-		return { user: user || undefined };
+		return { user: user || undefined }
 	}
 }

@@ -1,8 +1,8 @@
-import { Box } from "@chakra-ui/react";
-import * as React from "react";
+import { Box } from "@chakra-ui/react"
+import * as React from "react"
 
 interface WrapperProps {
-	variant?: "small" | "regular";
+	variant?: "small" | "regular"
 }
 
 export const Wrapper: React.FC<WrapperProps> = ({
@@ -18,7 +18,7 @@ export const Wrapper: React.FC<WrapperProps> = ({
 		>
 			{children}
 		</Box>
-	);
-};
+	)
+}
 
-export default Wrapper;
+export default Wrapper
