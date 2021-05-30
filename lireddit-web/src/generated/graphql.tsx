@@ -140,7 +140,7 @@ export type MeQuery = (
   { __typename?: 'Query' }
   & { me?: Maybe<(
     { __typename?: 'User' }
-    & Pick<User, 'username'>
+    & Pick<User, 'id' | 'username'>
   )> }
 );
 
@@ -183,6 +183,7 @@ export function useRegisterMutation() {
 export const MeDocument = gql`
     query me {
   me {
+    id
     username
   }
 }
